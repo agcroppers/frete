@@ -14,6 +14,9 @@
       --border: rgba(0,0,0,.10);
       --shadow: 0 10px 30px rgba(0,0,0,.08);
       --maxw: 980px;
+
+      /* definido via JS */
+      --header-h: 0px;
     }
 
     *{ box-sizing: border-box; }
@@ -30,15 +33,21 @@
       min-height: 100%;
       display: flex;
       flex-direction: column;
+      /* reserva espaço do header fixo */
+      padding-top: var(--header-h);
     }
 
-    /* Header */
+    /* Header (FIXO para não sobrepor no iOS) */
     .topbar{
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 10;
+      left: 0;
+      right: 0;
+      z-index: 100;
       background: #ffffff;
       border-bottom: 1px solid var(--border);
+      /* respeita notch/safe-area */
+      padding-top: env(safe-area-inset-top);
     }
 
     .topbar .inner{
@@ -105,8 +114,6 @@
     @media (max-width: 640px){
       main{ padding: 14px 12px 18px; }
       .topbar .inner{ padding: 12px; }
-      iframe{ height: calc(100vh - 76px); }
-      .frameWrap{ min-height: calc(100vh - 76px); }
       .titleWrap h1{ font-size: 1rem; }
     }
 
@@ -153,36 +160,33 @@
       padding: 12px 16px;
       font-size: 0.85rem;
       color: var(--muted);
-      text-align: center; /* alinhado ao centro */
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
-
-    <header class="topbar">
-      <div class="inner">
-        <div class="brand">
-          <img
-            src="https://cdn.jsdelivr.net/gh/agcroppers/lista-precos-oficial/assets/Logo%20Verde%20Liso%20AGC.png"
-            alt="Logo AG Croppers"
-          />
-          <div class="titleWrap">
-            <h1>Simulador de Frete</h1>
-          </div>
+  <header class="topbar" id="topbar">
+    <div class="inner">
+      <div class="brand">
+        <img
+          src="https://cdn.jsdelivr.net/gh/agcroppers/lista-precos-oficial/assets/Logo%20Verde%20Liso%20AGC.png"
+          alt="Logo AG Croppers"
+        />
+        <div class="titleWrap">
+          <h1>Simulador de Frete</h1>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
+  <div class="page">
     <main>
       <div class="card">
         <div id="loading" class="center">
           <div class="statusCard">
             <h2>Carregando…</h2>
-            <p class="muted">
-              Aguarde alguns segundos.
-            </p>
+            <p class="muted">Aguarde alguns segundos.</p>
           </div>
         </div>
 
@@ -198,30 +202,37 @@
         <div id="fallback" class="center" style="display:none;">
           <div class="statusCard">
             <h2>Não foi possível abrir o simulador</h2>
-            <p class="muted">
-              Tente novamente ou atualize a página.
-            </p>
+            <p class="muted">Tente novamente ou atualize a página.</p>
           </div>
         </div>
       </div>
     </main>
 
     <footer>
-      <div class="inner">
-        © AG Croppers
-      </div>
+      <div class="inner">© 2026 AG Croppers | Todos os direitos reservados.| Rua João Urbano Carvalho, 80 | Distrito Industrial IV | CEP:38064-740 Uberaba MG</div>
     </footer>
-
   </div>
 
   <script>
     (function () {
+      const topbar = document.getElementById('topbar');
       const iframe = document.getElementById('simulador');
       const loading = document.getElementById('loading');
       const fallback = document.getElementById('fallback');
 
       let loaded = false;
       const TIMEOUT_MS = 12000;
+
+      function setHeaderHeightVar() {
+        // inclui safe-area porque está no padding do topbar
+        const h = topbar.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--header-h', `${Math.ceil(h)}px`);
+      }
+
+      // Ajusta ao carregar e ao redimensionar/rotacionar
+      window.addEventListener('load', setHeaderHeightVar);
+      window.addEventListener('resize', setHeaderHeightVar);
+      setHeaderHeightVar();
 
       iframe.addEventListener('load', () => {
         loaded = true;
