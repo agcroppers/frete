@@ -40,4 +40,264 @@
       top: 0;
       z-index: 10;
       background: #ffffff;
-      border-bottom: 1px solid var(--
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar .inner{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand a{
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .titleWrap{
+      min-width: 0;
+    }
+
+    .titleWrap h1{
+      font-size: 1.05rem;
+      margin: 0;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subtitle{
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Conteúdo */
+    main{
+      flex: 1;
+      max-width: var(--maxw);
+      width: 100%;
+      margin: 0 auto;
+      padding: 18px 16px 22px;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* Área do iframe: mantém proporção “boa” em desktop e mobile */
+    .frameWrap{
+      width: 100%;
+      min-height: 78vh;
+    }
+
+    iframe{
+      width: 100%;
+      height: 78vh;
+      border: 0;
+      display: none; /* aparece após load */
+      background: #fff;
+    }
+
+    /* Ajustes mobile */
+    @media (max-width: 640px){
+      main{ padding: 14px 12px 18px; }
+      .topbar .inner{ padding: 12px 12px; }
+      iframe{ height: calc(100vh - 92px); } /* cabeçalho ~92px */
+      .frameWrap{ min-height: calc(100vh - 92px); }
+      .subtitle{ display: none; } /* opcional: some no mobile para não apertar */
+      .titleWrap h1{ font-size: 1rem; }
+    }
+
+    /* Loader / Fallback */
+    .center{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      text-align: center;
+    }
+
+    .statusCard{
+      max-width: 520px;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .statusCard h2{
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .muted{
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .btn{
+      display: inline-block;
+      margin-top: 14px;
+      background: var(--green);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 650;
+    }
+
+    /* Rodapé */
+    footer{
+      border-top: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    footer .inner{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <!-- Se quiser que a logo seja clicável para um link, substitua href -->
+          <a href="#" aria-label="AG Croppers" onclick="return false;">
+            <img
+              src="https://cdn.jsdelivr.net/gh/agcroppers/lista-precos-oficial/assets/Logo%20Verde%20Liso%20AGC.png"
+              alt="Logo AGC"
+              style="height:44px; width:auto; display:block;"
+            />
+          </a>
+
+          <div class="titleWrap">
+            <h1>Simulador de Frete</h1>
+            <div class="subtitle">AG Croppers — otimizado para celular</div>
+          </div>
+        </div>
+
+        <!-- Ação opcional à direita -->
+        <div>
+          <a class="btn" id="openNewTab" target="_blank" rel="noopener noreferrer"
+             href="https://script.google.com/macros/s/AKfycbyrK7ysCCC6rzLM_zH8DDJMQYka6C04LUrbP0jaAXOzH4eGkvaJR2BL8GTHmoFqru1G/exec">
+            Abrir em nova aba
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="card">
+        <!-- LOADING -->
+        <div id="loading" class="center">
+          <div class="statusCard">
+            <h2>Carregando…</h2>
+            <p class="muted">
+              Se não abrir em alguns segundos, clique em “Abrir em nova aba”.
+            </p>
+          </div>
+        </div>
+
+        <!-- IFRAME -->
+        <div class="frameWrap">
+          <iframe
+            id="simulador"
+            src="https://script.google.com/macros/s/AKfycbyrK7ysCCC6rzLM_zH8DDJMQYka6C04LUrbP0jaAXOzH4eGkvaJR2BL8GTHmoFqru1G/exec"
+            loading="eager"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        </div>
+
+        <!-- FALLBACK (se algum navegador bloquear iframe) -->
+        <div id="fallback" class="center" style="display:none;">
+          <div class="statusCard">
+            <h2>Não foi possível abrir dentro da página</h2>
+            <p class="muted">
+              Seu navegador bloqueou a exibição do simulador embutido.
+              Use o botão abaixo para abrir em uma nova aba.
+            </p>
+            <a class="btn"
+               href="https://script.google.com/macros/s/AKfycbyrK7ysCCC6rzLM_zH8DDJMQYka6C04LUrbP0jaAXOzH4eGkvaJR2BL8GTHmoFqru1G/exec"
+               target="_blank" rel="noopener noreferrer">
+              Abrir simulador
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="inner">
+        <div>© AG Croppers</div>
+        <div>Simulador de frete (Apps Script) — UI via GitHub Pages</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      const iframe = document.getElementById('simulador');
+      const loading = document.getElementById('loading');
+      const fallback = document.getElementById('fallback');
+
+      let loaded = false;
+
+      // Apps Script pode demorar no primeiro carregamento
+      const TIMEOUT_MS = 12000;
+
+      iframe.addEventListener('load', () => {
+        loaded = true;
+        loading.style.display = 'none';
+        fallback.style.display = 'none';
+        iframe.style.display = 'block';
+      });
+
+      setTimeout(() => {
+        if (!loaded) {
+          loading.style.display = 'none';
+          iframe.style.display = 'none';
+          fallback.style.display = 'flex';
+        }
+      }, TIMEOUT_MS);
+    })();
+  </script>
+</body>
+</html>
